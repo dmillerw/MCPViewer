@@ -13,7 +13,7 @@ def snapshot(mapping, type):
         return "{} doesn't exist as a mapping".format(mapping)
 
     split = mapping.split('-')
-    return grab_mapping(split[0], split[1] + split[2], type)
+    return grab_mapping(split[0], split[1] + "-" + split[2], type)
 
 def grab_mapping(type, version, file):
     url = _DOWNLOAD_PATH_.format(type, version, type + "-" + version)
@@ -32,8 +32,9 @@ def grab_mapping(type, version, file):
             data = urllib2.urlopen(req).read()
             zip = zipfile.ZipFile(StringIO(data))
             zip.extractall(file_path)
+            print "extracted zip"
+            print zip.namelist()
         except IOError, e:
             return "{} doesn't exist as a mapping".format(type + "-" + version)
-    else:
-        return open(file_path + file + ".csv", "r").read()
 
+    return open(file_path + file + ".csv", "r").read()
