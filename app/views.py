@@ -7,13 +7,13 @@ from StringIO import StringIO
 
 _DOWNLOAD_PATH_ = "http://export.mcpbot.bspk.rs/{0}/{1}/{2}.zip"
 
-@app.route('/mcp/snapshot/<mapping>/<type>')
+@app.route('/mcp/<mapping>/<type>')
 def snapshot(mapping, type):
-    return grab_mapping("mcp_snapshot", mapping, type)
+    if "mcp_" not in mapping and ("stable" not in mapping or "snapshot" not in mapping):
+        return "{} doesn't exist as a mapping".format(mapping)
 
-@app.route('/mcp/stable/<mapping>/<type>')
-def stable(mapping, type):
-    return grab_mapping("mcp_stable", mapping, type)
+    split = mapping.split('-')
+    return grab_mapping(split[0], split[1] + split[2], type)
 
 def grab_mapping(type, version, file):
     url = _DOWNLOAD_PATH_.format(type, version, type + "-" + version)
