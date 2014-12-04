@@ -20,6 +20,9 @@ def grab_mapping(type, version, file):
     file_path = "cache/" + type + "-" + version + "/"
     dirname = os.path.dirname(file_path)
 
+    if file != "fields" and file != "methods" and file != "params":
+        return "{} is an invalid mapping type".format(file)
+
     # If it doesn't exist, download it
     if not os.path.exists(dirname):
         os.makedirs(dirname)
@@ -30,7 +33,7 @@ def grab_mapping(type, version, file):
             zip = zipfile.ZipFile(StringIO(data))
             zip.extractall(file_path)
         except IOError, e:
-            return "INVALID MAPPING!"
+            return "{} doesn't exist as a mapping".format(type + "-" + version)
     else:
         return open(file_path + file + ".csv", "r").read()
 
